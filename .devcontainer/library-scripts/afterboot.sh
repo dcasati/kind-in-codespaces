@@ -58,7 +58,10 @@ echo $DEPLOY_CONFIG > config.json
 
 az login --scope https://graph.microsoft.com//.default
 
-ssh-keygen -m PEM -b 4096 -t rsa -f "$SSH_KEY_PATH" -q -N ""
+if [ ! -d "$SSH_KEY_PATH" ] 
+then
+    ssh-keygen -m PEM -b 4096 -t rsa -f "$SSH_KEY_PATH" -q -N "" 
+fi
 
 # Get required values for tilt-settings.json
 az account show -o json > $WORKDIR/azure_account.json
