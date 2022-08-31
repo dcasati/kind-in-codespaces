@@ -98,10 +98,6 @@ git clone https://github.com/devigned/cluster-api-provider-azure
 cd cluster-api-provider-azure
 git checkout --track origin/wasm-flavor
 
-# Create a secret to include the password of the Service Principal identity created in Azure
-# This secret will be referenced by the AzureClusterIdentity used by the AzureCluster
-kubectl create secret generic "${AZURE_CLUSTER_IDENTITY_SECRET_NAME}" --from-literal=clientSecret="${AZURE_CLIENT_SECRET}" --namespace "${AZURE_CLUSTER_IDENTITY_SECRET_NAMESPACE}"
-
 ## Write out envs
 echo '#! /bin/bash' > $WORKDIR/outputs.sh
 # Base Info
@@ -152,3 +148,10 @@ TILT_SETTINGS=$(jq --null-input \
     '{"kustomize_substitutions": { "AZURE_SUBSCRIPTION_ID": $subid, "AZURE_TENANT_ID": $tenant, "AZURE_CLIENT_SECRET": $clientsecret, "AZURE_CLIENT_ID": $clientid } }')
 
 echo $TILT_SETTINGS > tilt-settings.json
+
+# bootstraping tilt
+make tilt-up
+
+# Create a secret to include the password of the Service Principal identity created in Azure
+# This secret will be referenced by the AzureClusterIdentity used by the AzureCluster
+kubectl create secret generic "${AZURE_CLUSTER_IDENTITY_SECRET_NAME}" --from-literal=clientSecret="${AZURE_CLIENT_SECRET}" --namespace "${AZURE_CLUSTER_IDENTITY_SECRET_NAMESPACE}"
