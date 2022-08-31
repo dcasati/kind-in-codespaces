@@ -58,7 +58,7 @@ echo $DEPLOY_CONFIG > config.json
 
 az login --scope https://graph.microsoft.com//.default
 
-if [ ! -f "$SSH_KEY_PATH" ] 
+if [[ ! -f "$SSH_KEY_PATH" ]]
 then
     ssh-keygen -m PEM -b 4096 -t rsa -f "$SSH_KEY_PATH" -q -N "" 
 fi
